@@ -1323,6 +1323,9 @@ window.ReactDOM["default"] = window.ReactDOM;
                     }
                 }
 
+                if (this.props.onFilterComplete) {
+                    this.props.onFilterComplete(filter, matchedChildren);
+                }
                 return matchedChildren;
             }
         }, {
@@ -1517,7 +1520,7 @@ window.ReactDOM["default"] = window.ReactDOM;
                         onFilter: function (filter) {
                             _this.setState({ filter: filter });
                             if (_this.props.onFilter) {
-                                _this.props.onFilter(filter, filteredChildren);
+                                _this.props.onFilter(filter);
                             }
                         },
                         filterPlaceholder: this.props.filterPlaceholder,

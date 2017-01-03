@@ -1983,10 +1983,8 @@ describe('Reactable', function() {
         describe('filtering with javascript objects for data', function(){
             var data = [{name:"Lee SomeoneElse", age:18},{name:"Lee Salminen", age:23},{name:"No Age", age:null}]
             var filterBy
-			var matchingRows
-            var onFilter = function (filter, matches) {
+            var onFilter = function (filter) {
                 filterBy = filter
-				matchingRows = matches
             }
             before(function () {
                 ReactDOM.render(
@@ -2029,7 +2027,6 @@ describe('Reactable', function() {
                 React.addons.TestUtils.Simulate.keyUp($filter[0]);
 
                 expect(filterBy).to.equal(textToSearch);
-				expect(matchingRows.length).to.equal(2);
             });
         });
 
@@ -2424,6 +2421,36 @@ describe('Reactable', function() {
                 });
             });
         });
+		
+		context('filter completion callback', function() {
+			let results, component;
+			
+            before(function() {
+                component = ReactDOM.render(
+                    <Reactable.Table className="table" id="table" data={[
+                        {'State': 'New York', 'Description': 'this is some text', 'Tag': 'new'},
+                        {'State': 'New Mexico', 'Description': 'lorem ipsum', 'Tag': 'old'},
+                        {'State': 'Colorado', 'Description': 'new description that shouldn\'t match filter',
+                            'Tag': 'old'},
+                        {'State': 'Alaska', 'Description': 'bacon', 'Tag': 'renewed'},
+                    ]}
+                        filterable={['State']}
+                        columns={['State', 'Description', 'Tag']}
+                        itemsPerPage={2} 
+						onFilterComplete={function(filter, matches) {
+							results = matches;
+						}.bind(this)}/>,
+                    ReactableTestUtils.testNode()
+                );
+            });
+			
+			after(ReactableTestUtils.resetTestEnvironment);
+			
+			it('should be triggered', function() {
+				component.filterBy('New');
+				expect(results.length).to.equal(2);
+			});
+		});
     });
 
     describe('directly passing a data array with non-string data', function() {

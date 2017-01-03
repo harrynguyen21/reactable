@@ -286,6 +286,9 @@ export class Table extends React.Component {
             }
         }
 
+		if (this.props.onFilterComplete) {
+			this.props.onFilterComplete(filter, matchedChildren);
+		}
         return matchedChildren;
     }
 
@@ -488,7 +491,7 @@ export class Table extends React.Component {
                        onFilter={filter => {
                      this.setState({ filter: filter });
                      if (this.props.onFilter) {
-                        this.props.onFilter(filter, filteredChildren)
+                        this.props.onFilter(filter)
                      }
                  }}
                        filterPlaceholder={this.props.filterPlaceholder}
